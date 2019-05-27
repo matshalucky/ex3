@@ -16,7 +16,7 @@ namespace ex3
             routes.MapRoute(
                 name: "Default",
                 url: "Display/{ip}/{port}",
-                defaults: new { controller = "First", action = "Map" , ip="127.0.0.1" , port="5400" }
+                defaults: new { controller = "First", action = "Map"}
             );
         }
     }
