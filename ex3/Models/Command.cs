@@ -3,13 +3,15 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
-namespace FlightSimulator.Model
+using System.IO;
+namespace ex3.Models
 {
 
     class Commands
     {
         private TcpClient client;
         private NetworkStream stream;
+        private StreamReader streamReader;  
         private bool isConnected = false;
         private bool isProgramAlive = true;
         private static Commands m_Instance = null;
@@ -70,40 +72,47 @@ namespace FlightSimulator.Model
             }
             isConnected = true;
             stream = client.GetStream();
-
+            streamReader = new StreamReader(stream);
         }
         // send a comman to simulaton if connected
-        public void commandSimulator(string command)
+        private string parseData(string data)
         {
-            
+            string[] words = data.Split('\'');
+            return words[1];
+        }
+        public string getData(string command)
+        {
+            string data;
             if (!isConnected)
             {
-                return;
+                return "not connect";
             }
             string binaryCommand = command + "\r\n";
             byte[] bufferRoWrite = Encoding.ASCII.GetBytes(binaryCommand);
             stream.Write(bufferRoWrite, 0, bufferRoWrite.Length);
+            data =streamReader.ReadLine();
+            return parseData(data);
         }
 
         // split multiline commands to sent to the simualtor
-        public void sendCommand(string userCommands)
-        {
-            // thread so more then one command will not delay the program
-            new Thread(delegate ()
-            {
-                if (!isConnected)
-                {
-                    return;
-                }
-                string[] commands = userCommands.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                foreach (string command in commands)
-                {
-                    commandSimulator(command);
-                    Thread.Sleep(2000);
-                }
+        //public void sendCommand(string userCommands)
+        //{
+        //    // thread so more then one command will not delay the program
+        //    new Thread(delegate ()
+        //    {
+        //        if (!isConnected)
+        //        {
+        //            return;
+        //        }
+        //        string[] commands = userCommands.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+        //        foreach (string command in commands)
+        //        {
+        //            (command);
+        //            Thread.Sleep(2000);
+        //        }
 
-            }).Start();
-        }
+        //    }).Start();
+        //}
         // close the serever
         public void close()
         {
