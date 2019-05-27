@@ -7,28 +7,22 @@
 
 <html>
 <head>
-	<style>
-		html, body {
-		width:  100%;
-		height: 100%;
-		margin: 0;
-	}
-	</style>
-	
+    <style>
+       
+    </style>
 
 </head>
 <body>
 
 	@*<img src="~/map.PNG" />*@
 
-	<canvas id="canvas"></canvas>
+	<canvas id="canvas" style=" height:100%; width:100%; position:fixed;
+    background:url('../../Content/map.png'); background-size:100% 100%;"></canvas>
 
 	<script>
+        
 		var c1 = document.getElementById("canvas");
-		c1.canvas.width  = window.innerWidth;
-		c1.canvas.height = window.innerHeight;
 		var context1 = c1.getContext("2d");
-		c1.style = 
 		context1.beginPath();
 		context1.lineWidth = 1;
 		context1.arc(100, 80, 6, 0, 2 * Math.PI);
