@@ -7,22 +7,20 @@
 
 <html>
 <head>
-    <link href="~/Views/First/StyleSheet1.css" rel="stylesheet" type="text/css"/>
+    <link href="~/Image/StyleSheet1.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-    
-	<canvas id="canvas" style=" height:100%; width:100%; position:center center;
-    background:url('../../Content/map.png'); background-size:100% 100%;
-    background-attachment:fixed; background-repeat:no-repeat;"></canvas>
+	<canvas id="canvas"></canvas>
 	<script>
         var c1 = document.getElementById("canvas");
 		var context1 = c1.getContext("2d");
-		context1.beginPath();
+        context1.beginPath();
 		context1.lineWidth = 1;
 		context1.arc(100, 80, 6, 0, 2 * Math.PI);
 		context1.fillStyle = 'red';
 		context1.fill();
-        //context1.stroke();
+        context1.stroke();
+
 
 	</script>
 </body>

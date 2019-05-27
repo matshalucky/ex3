@@ -1,7 +1,7 @@
 ﻿body {
-    background-image: url('../../Content/map.png');
+    background-image: url('../../Image/map.png');
     background-size: 100% 100%;
     background-position: center center;
     background-attachment: fixed;
-    background-repeat: no-repeat
+    background-repeat: no-repeat;
 }

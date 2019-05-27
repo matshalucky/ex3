@@ -103,8 +103,8 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Content\map.png" />
-    <Content Include="Views\First\StyleSheet1.css" />
+    <Content Include="Image\map.png" />
+    <Content Include="Image\StyleSheet1.css" />
     <Content Include="Web.config" />
     <Content Include="Views\First\Index.cshtml" />
     <Content Include="Views\First\Map.cshtml" />
