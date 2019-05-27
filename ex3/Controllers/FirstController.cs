@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+//
 namespace ex3.Controllers
 {
     public class FirstController : Controller
@@ -19,8 +19,6 @@ namespace ex3.Controllers
 
             ViewBag.ip = ip;
             ViewBag.port = port;
-           
-
             return View();
         }
     }
