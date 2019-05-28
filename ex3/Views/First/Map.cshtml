@@ -21,10 +21,7 @@
 		var lon = (@ViewBag.lon + 180) * (window.innerWidth / 360);
 		var lat = (@ViewBag.lat + 90) * (window.innerHeight / 180);
 		
-		alert(lon);
-		alert(lat);
-		alert(window.innerWidth);
-		alert(window.innerHeight);
+		
 
 		context1.arc(lon, lat, 6, 0, 2 * Math.PI);
 		context1.fillStyle = 'red';

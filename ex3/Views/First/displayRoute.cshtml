@@ -1,0 +1,45 @@
+﻿
+@{
+	ViewBag.Title = "displayRoute";
+}
+<html>
+<head>
+	<link href="~/Image/StyleSheet1.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<canvas id="canvas" style="width:100%; height:100%;"></canvas>
+	
+	<script>
+    var IntervalTime = @Session["time"] * 1000
+    myTimer = (function () {
+        $.post("@Url.Action("ToXml")").done(function (xml) {
+            
+            var xmldoc = $.parseXML(xml);
+            
+            $xml = $(xmldoc);
+  
+            
+            lon = parseFloat($xml.find("lon").text());
+            lat = parseFloat($xml.find("lat").text());
+            var c1 = document.getElementById("canvas");
+            var context1 = c1.getContext("2d");
+            context1.canvas.width = window.innerWidth;
+            context1.canvas.height = window.innerHeight;
+            context1.beginPath();
+            context1.lineWidth = 1;
+
+            var lonn = (lon + 180) * (window.innerWidth / 360);
+            var latn = (lat + 90) * (window.innerHeight / 180);
+			context1.arc(lonn, latn, 6, 0, 2 * Math.PI);
+			context1.fillStyle = 'red';
+			context1.fill();
+			context1.stroke();
+        });
+    });
+
+    setInterval(myTimer, IntervalTime);
+    myTimer();
+	</script>
+
+	</body>
+	</html>
