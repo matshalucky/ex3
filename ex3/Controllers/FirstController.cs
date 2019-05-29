@@ -91,7 +91,7 @@ namespace ex3.Controllers
             return View();
         }
 
-        public ActionResult displayRoute(string ip, int port , int time)
+        public ActionResult DisplayRoute(string ip, int port , int time)
         {
             Commands.Instance.connect(ip, port);
             Session["time"] = time;
@@ -100,11 +100,18 @@ namespace ex3.Controllers
 
             return View();
         }
-        public ActionResult save(string ip, int port,int pace, int duration,string fileName)
+        public ActionResult Save(string ip, int port,int pace, int duration,string fileName)
         {
             Commands.Instance.connect(ip, port);
             FileHandler.Instance.FileName = fileName;
             Session["pace"] = pace;
+            Session["duration"] = duration;
+            return View();
+        }
+
+        public ActionResult Load(string fileName, int duration)
+        {
+            FileHandler.Instance.FileName = fileName;
             Session["duration"] = duration;
             return View();
         }
