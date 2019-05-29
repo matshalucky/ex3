@@ -20,10 +20,16 @@ namespace ex3
 
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapRoute(
-                name: "DisplayRoute",
-                url: "Display/{ip}/{port}/{time}",
-                defaults: new { controller = "First", action = "displayRoute" }
+                name: "SaveRoute",
+                url: "Save/{ip}/{port}/{pace}/{duration}/{fileName}",
+                defaults: new { controller = "First", action = "save" }
             );
+
+            routes.MapRoute(
+               name: "DisplayRoute",
+               url: "Display/{ip}/{port}/{time}",
+               defaults: new { controller = "First", action = "displayRoute" }
+           );
 
             routes.MapRoute(
               name: "Default",

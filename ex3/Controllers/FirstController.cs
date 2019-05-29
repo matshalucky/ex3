@@ -13,18 +13,29 @@ namespace ex3.Controllers
 {
     public class FirstController : Controller
     {
+
         public string Test()
         {
             return "success";
         }
+        private KeyValuePair<string,string> GetLonLat()
+        {
+            Random rnd = new Random();
+            string lon = Commands.Instance.getData("get /position/longitude-deg");
+            string lat = Commands.Instance.getData("get /position/latitude-deg");
+            float lonTemp = float.Parse(lon) + rnd.Next(50);
+            float latTemp = float.Parse(lat) + rnd.Next(50);
+            lon = lonTemp.ToString();
+            lat = latTemp.ToString();
 
+            return new KeyValuePair<string, string>(lon, lat);
+        }
         [HttpPost]
         public string ToXml()
         {
-            Random rnd = new Random();
-            string lon = Commands.Instance.getData("get /position/longitude-deg") + rnd.Next(50);
-            string lat = Commands.Instance.getData("get /position/latitude-deg") + rnd.Next(50);
-            //Initiate XML stuff
+            KeyValuePair<string, string> point = GetLonLat();
+            string lon = point.Key;
+            string lat = point.Value;
             StringBuilder sb = new StringBuilder();
             XmlWriterSettings settings = new XmlWriterSettings();
             XmlWriter writer = XmlWriter.Create(sb, settings);
@@ -36,8 +47,31 @@ namespace ex3.Controllers
             writer.WriteEndDocument();
             writer.Flush();
             return sb.ToString();
-
         }
+        [HttpPost] 
+
+        public string GetFlightData()
+        {
+            KeyValuePair<string, string> point = GetLonLat();
+            string lon = point.Key;
+            string lat = point.Value;
+            string rudder = Commands.Instance.getData("get /controls/flight/rudder");
+            string throttle = Commands.Instance.getData("get /controls/engines/current-engine/throttle");
+            StringBuilder sb = new StringBuilder();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            XmlWriter writer = XmlWriter.Create(sb, settings);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Location");
+            writer.WriteElementString("lon", lon);
+            writer.WriteElementString("lat", lat);
+            writer.WriteElementString("rudder", rudder);
+            writer.WriteElementString("throttle", throttle);
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Flush();
+            return sb.ToString();
+        }
+
         // GET: First
         public ActionResult Index()
         {
@@ -62,6 +96,13 @@ namespace ex3.Controllers
 
 
 
+            return View();
+        }
+        public ActionResult save(string ip, int port,int pace, int duration,string fileName)
+        {
+            Commands.Instance.connect(ip, port);
+            Session["pace"] = pace;
+            Session["duration"] = duration;
             return View();
         }
     }

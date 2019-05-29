@@ -16,17 +16,12 @@
 		var context1 = c1.getContext("2d");
 		context1.canvas.width = window.innerWidth;
 		context1.canvas.height = window.innerHeight;
-		context1.beginPath();
-		context1.lineWidth = 1;
+		
 		var lon = (@ViewBag.lon + 180) * (window.innerWidth / 360);
 		var lat = (@ViewBag.lat + 90) * (window.innerHeight / 180);
-		
-		
+        drawCircle(lon, lat, context1);
 
-		context1.arc(lon, lat, 6, 0, 2 * Math.PI);
-		context1.fillStyle = 'red';
-		context1.fill();
-		context1.stroke();
+		
 
 
 	</script>
