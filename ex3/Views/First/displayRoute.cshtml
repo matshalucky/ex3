@@ -14,28 +14,20 @@
     var IntervalTime = @Session["time"] * 1000
     myTimer = (function () {
         $.post("@Url.Action("ToXml")").done(function (xml) {
-            
-            var xmldoc = $.parseXML(xml);
-            
-            $xml = $(xmldoc);
-  
-            
-            lon = parseFloat($xml.find("lon").text());
-            lat = parseFloat($xml.find("lat").text());
             var c1 = document.getElementById("canvas");
             var context1 = c1.getContext("2d");
             context1.canvas.width = window.innerWidth;
             context1.canvas.height = window.innerHeight;
-            var lonn = (lon + 180) * (window.innerWidth / 360);
-            var latn = (lat + 90) * (window.innerHeight / 180);
-            var point = { x: lonn, y: latn };
-            locations.push(point);
-            drawCircle(lonn, latn, context1);
-            drawLine(locations, context1);
+            var xmldoc = $.parseXML(xml);
+            $xml = $(xmldoc);
+            lon = parseFloat($xml.find("lon").text());
+            lat = parseFloat($xml.find("lat").text());
+            drawRoute(context1, lon, lat, locations);
         });
     });
 
-    setInterval(myTimer, IntervalTime);
+         setInterval(myTimer, IntervalTime);
+        setTimeout()
     myTimer();
 	</script>
 

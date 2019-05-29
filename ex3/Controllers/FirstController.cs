@@ -30,12 +30,8 @@ namespace ex3.Controllers
 
             return new KeyValuePair<string, string>(lon, lat);
         }
-        [HttpPost]
-        public string ToXml()
+        public string createXml(string lon , string lat)
         {
-            KeyValuePair<string, string> point = GetLonLat();
-            string lon = point.Key;
-            string lat = point.Value;
             StringBuilder sb = new StringBuilder();
             XmlWriterSettings settings = new XmlWriterSettings();
             XmlWriter writer = XmlWriter.Create(sb, settings);
@@ -48,8 +44,15 @@ namespace ex3.Controllers
             writer.Flush();
             return sb.ToString();
         }
+        [HttpPost]
+        public string ToXml()
+        {
+            KeyValuePair<string, string> point = GetLonLat();
+            string lon = point.Key;
+            string lat = point.Value;
+            return createXml(lon, lat);
+        }
         [HttpPost] 
-
         public string GetFlightData()
         {
             KeyValuePair<string, string> point = GetLonLat();
@@ -57,21 +60,20 @@ namespace ex3.Controllers
             string lat = point.Value;
             string rudder = Commands.Instance.getData("get /controls/flight/rudder");
             string throttle = Commands.Instance.getData("get /controls/engines/current-engine/throttle");
-            StringBuilder sb = new StringBuilder();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            XmlWriter writer = XmlWriter.Create(sb, settings);
-            writer.WriteStartDocument();
-            writer.WriteStartElement("Location");
-            writer.WriteElementString("lon", lon);
-            writer.WriteElementString("lat", lat);
-            writer.WriteElementString("rudder", rudder);
-            writer.WriteElementString("throttle", throttle);
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Flush();
-            return sb.ToString();
+            AddData(lon, lat, rudder, throttle);
+            return createXml(lon, lat);
         }
-
+        
+        private void AddData(string lon , string lat ,string rud, string throt)
+        {
+            string data = lon + "," + lat + "," + rud + "," + throt;
+            FileHandler.Instance.updateData(data);
+        }
+        [HttpPost]
+        public void SaveData()
+        {
+            FileHandler.Instance.WriteFile();
+        }
         // GET: First
         public ActionResult Index()
         {
@@ -101,6 +103,7 @@ namespace ex3.Controllers
         public ActionResult save(string ip, int port,int pace, int duration,string fileName)
         {
             Commands.Instance.connect(ip, port);
+            FileHandler.Instance.FileName = fileName;
             Session["pace"] = pace;
             Session["duration"] = duration;
             return View();
