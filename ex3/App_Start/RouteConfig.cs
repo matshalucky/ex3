@@ -18,7 +18,7 @@ namespace ex3
                 defaults: new { controller = "First", action = "Map" }
             );
             routes.MapRoute(
-                name: "Display",
+                name: "DisplayLoad",
                 url: "Display/{fileName}/{pace}",
                 defaults: new { controller = "First", action = "Load" }
             );

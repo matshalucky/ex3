@@ -108,5 +108,10 @@ namespace ex3.Controllers
             Session["duration"] = duration;
             return View();
         }
+
+        public ActionResult Load(string fileName, int pace)
+        {
+            return View();
+        }
     }
 }
