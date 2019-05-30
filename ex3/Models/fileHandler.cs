@@ -94,7 +94,6 @@ namespace ex3.Models
                 }
             }
             
-
             numOfPoints = lineCounter;
         }
         public int getNumOfPoints()
