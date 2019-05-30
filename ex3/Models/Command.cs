@@ -116,11 +116,6 @@ namespace ex3.Models
         // close the serever
         public void close()
         {
-            // if the thread has not finish change the property will lead to close the server
-            if (connection.IsAlive)
-            {
-                IsProgramAlive = false;
-            }
             isConnected = false;
             client.Close();
         }

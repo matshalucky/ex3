@@ -21,9 +21,9 @@ function drawLine(locations, context) {
 
 function drawRoute(context, lon, lat, locations) {
     var lonn = (lon + 180) * (window.innerWidth / 360);
-    var latn = (lat + 90) * (window.innerHeight / 180);
+    var latn = (lat + -90) * (window.innerHeight / -180);
     var point = { x: lonn, y: latn };
     locations.push(point);
-    drawCircle(lonn, latn, context);
-    drawLine(locations, context);
+    drawCircle(locations[0].x, locations[0].y, context);
+    drawLine(locations, context);   
 }
