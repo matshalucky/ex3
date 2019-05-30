@@ -10,6 +10,7 @@ namespace ex3.Models
     public class FileHandler
     {
         private static FileHandler m_Instance = null;
+        
         //singelton
         public static FileHandler Instance
         {
@@ -43,6 +44,45 @@ namespace ex3.Models
 
         }
 
+        List<string> parsedData = new List<string>();
+        int numOfPoints = 0;
+        int index = 0;
+        public int Index
+        {
+            get
+            {
+                return index;
+            }
+            set
+            {
+                index = value;
+            }
+        }
+
+        public void pasreDataFromFile()
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName + ".txt";
+            int lineCounter = 0;
+            using (StreamReader sr = System.IO.File.OpenText(path))
+            {
+                string s = "";
+                while((s = sr.ReadLine()) != null)
+                {
+                    parsedData.Add(s);
+                    lineCounter++;
+                }
+            }
+
+            numOfPoints = lineCounter;
+        }
+        public int getNumOfPoints()
+        {
+            return numOfPoints;
+        }
+        public string getLonLat()
+        {
+            return this.parsedData[index++];   
+        }
         //public void WriteFile()
         //{
         //    fileName += ".txt";
@@ -54,9 +94,7 @@ namespace ex3.Models
             using (StreamWriter outputFile = File.AppendText(path))
             {
        
-                    outputFile.WriteLine(data);
-                
-               
+                    outputFile.WriteLine(data);             
             }
 
         }

@@ -19,7 +19,6 @@
         var context1 = c1.getContext("2d");
          myTimer = (function () {
              $.post("@Url.Action("GetFlightData")").done(function (xml) {
-                 
                  context1.canvas.width = window.innerWidth;
                  context1.canvas.height = window.innerHeight;
                  var xmldoc = $.parseXML(xml);

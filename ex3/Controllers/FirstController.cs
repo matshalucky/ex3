@@ -13,7 +13,7 @@ namespace ex3.Controllers
 {
     public class FirstController : Controller
     {
-
+        
         public string Test()
         {
             return "success";
@@ -30,6 +30,7 @@ namespace ex3.Controllers
 
             return new KeyValuePair<string, string>(lon, lat);
         }
+
         public string createXml(string lon , string lat)
         {
             StringBuilder sb = new StringBuilder();
@@ -70,6 +71,20 @@ namespace ex3.Controllers
             FileHandler.Instance.updateData(data);
         }
         [HttpPost]
+        public string GetFlightDataFromFile()
+        {
+            // parse the data from the file for the first time.
+            if(FileHandler.Instance.Index == FileHandler.Instance.getNumOfPoints())
+            {
+                return "";
+            }
+            IList<string> paramList = FileHandler.Instance.getLonLat().Split(',').ToList<string>();
+            string lon = paramList[0];
+            string lat = paramList[1];
+            return createXml(lon, lat);
+        }
+
+        [HttpPost]
         public void SaveData()
         {
             FileHandler.Instance.WriteFile();
@@ -95,9 +110,7 @@ namespace ex3.Controllers
         {
             Commands.Instance.connect(ip, port);
             Session["time"] = time;
-
-
-
+                       
             return View();
         }
         public ActionResult save(string ip, int port,int pace, int duration,string fileName)
@@ -111,6 +124,10 @@ namespace ex3.Controllers
 
         public ActionResult Load(string fileName, int pace)
         {
+            FileHandler.Instance.FileName = fileName;
+            FileHandler.Instance.pasreDataFromFile();
+            ViewBag.numOfPoints = FileHandler.Instance.getNumOfPoints();
+            Session["pace"] = pace;
             return View();
         }
     }

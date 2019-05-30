@@ -2,6 +2,41 @@
 @{
     ViewBag.Title = "Load";
 }
+    <html>
+    <head>
+        <link href="~/Image/StyleSheet1.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <canvas id="canvas" style="width:100%; height:100%;"></canvas>
+        <script>
+		    var c1 = document.getElementById("canvas");
+            var context1 = c1.getContext("2d");
+            var locations =[];
+		    context1.canvas.width = window.innerWidth;
+            context1.canvas.height = window.innerHeight;
+            var IntervalTime = @Session["pace"] * 1000;
+            var index = 0;
+                 myTimer = (function () {
+                     $.post("@Url.Action("GetFlightDataFromFile")").done(function (xml) {    
+                     if (xml == "") {
+                        alert("done!");
+                        clearInterval(interval);
+                     }
+                    context1.canvas.width = window.innerWidth;
+                    context1.canvas.height = window.innerHeight;
+                    var xmldoc = $.parseXML(xml);
+                    $xml = $(xmldoc);
+                    lon = parseFloat($xml.find("lon").text());
+                    lat = parseFloat($xml.find("lat").text());
+                    drawRoute(context1, lon, lat, locations);
+                    index++;
+                });
+            });
+            var interval = setInterval(myTimer, IntervalTime);
+            myTimer();
+        </script>
 
-<h2>Load</h2>
+    </body>
+    </html>
+
 
