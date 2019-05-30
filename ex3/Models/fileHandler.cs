@@ -26,7 +26,6 @@ namespace ex3.Models
         public string data ="";
         public string fileName;
         public StreamWriter writer;
-        public bool firstWrite =true;
         public string FileName
         {
             get
@@ -39,14 +38,14 @@ namespace ex3.Models
             }
         }
 
-        public void updateData(string newData)
+        public void UpdateData(string newData)
         {
             data = newData;
 
         }
         public void Close()
         {
-            firstWrite = true;
+            Index = 0;
         }
 
         //public void WriteFile()
@@ -79,7 +78,7 @@ namespace ex3.Models
             }
         }
 
-        public void pasreDataFromFile()
+        public void PasreDataFromFile()
         {
             parsedData = new List<string>();
             string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName + ".txt";
@@ -96,11 +95,11 @@ namespace ex3.Models
             
             numOfPoints = lineCounter;
         }
-        public int getNumOfPoints()
+        public int GetNumOfPoints()
         {
             return numOfPoints;
         }
-        public string getLonLat()
+        public string GetLonLat()
         {
             return this.parsedData[index++];
         }

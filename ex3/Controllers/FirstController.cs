@@ -14,15 +14,12 @@ namespace ex3.Controllers
     public class FirstController : Controller
     {
 
-        public string Test()
-        {
-            return "success";
-        }
+        
         private KeyValuePair<string,string> GetLonLat()
         {
             Random rnd = new Random();
-            string lon = Commands.Instance.getData("get /position/longitude-deg");
-            string lat = Commands.Instance.getData("get /position/latitude-deg");
+            string lon = Commands.Instance.GetData("get /position/longitude-deg");
+            string lat = Commands.Instance.GetData("get /position/latitude-deg");
             float lonTemp = float.Parse(lon) + rnd.Next(50);
             float latTemp = float.Parse(lat) + rnd.Next(50);
             //float lonTemp = float.Parse(lon);
@@ -32,7 +29,7 @@ namespace ex3.Controllers
 
             return new KeyValuePair<string, string>(lon, lat);
         }
-        public string createXml(string lon , string lat)
+        public string CreateXml(string lon , string lat)
         {
             StringBuilder sb = new StringBuilder();
             XmlWriterSettings settings = new XmlWriterSettings();
@@ -52,7 +49,7 @@ namespace ex3.Controllers
             KeyValuePair<string, string> point = GetLonLat();
             string lon = point.Key;
             string lat = point.Value;
-            return createXml(lon, lat);
+            return CreateXml(lon, lat);
         }
         [HttpPost] 
         public string GetFlightData()
@@ -60,16 +57,16 @@ namespace ex3.Controllers
             KeyValuePair<string, string> point = GetLonLat();
             string lon = point.Key;
             string lat = point.Value;
-            string rudder = Commands.Instance.getData("get /controls/flight/rudder");
-            string throttle = Commands.Instance.getData("get /controls/engines/current-engine/throttle");
+            string rudder = Commands.Instance.GetData("get /controls/flight/rudder");
+            string throttle = Commands.Instance.GetData("get /controls/engines/current-engine/throttle");
             AddData(lon, lat, rudder, throttle);
-            return createXml(lon, lat);
+            return CreateXml(lon, lat);
         }
         
         private void AddData(string lon , string lat ,string rud, string throt)
         {
             string data = lon + "," + lat + "," + rud + "," + throt;
-            FileHandler.Instance.updateData(data);
+            FileHandler.Instance.UpdateData(data);
         }
         [HttpPost]
         public void SaveData()
@@ -79,9 +76,9 @@ namespace ex3.Controllers
         [HttpPost]
         public void CloseConnection()
         {
-            Commands.Instance.close();
+            Commands.Instance.Close();
             FileHandler.Instance.Close();
-            FileHandler.Instance.Index = 0;
+            
         }
         // GET: First
         public ActionResult Index()
@@ -91,27 +88,24 @@ namespace ex3.Controllers
 
         public ActionResult Map(string ip, int port)
         {
-            Commands.Instance.connect(ip, port);
+            Commands.Instance.Connect(ip, port);
 
-            ViewBag.lon = Commands.Instance.getData("get /position/longitude-deg");
-            ViewBag.lat = Commands.Instance.getData("get /position/latitude-deg");
+            ViewBag.lon = Commands.Instance.GetData("get /position/longitude-deg");
+            ViewBag.lat = Commands.Instance.GetData("get /position/latitude-deg");
             ViewBag.ip = ip;
             ViewBag.port = port;
             return View();
         }
 
-        public ActionResult displayRoute(string ip, int port , int time)
+        public ActionResult DisplayRoute(string ip, int port , int time)
         {
-            Commands.Instance.connect(ip, port);
+            Commands.Instance.Connect(ip, port);
             Session["time"] = time;
-
-
-
             return View();
         }
-        public ActionResult save(string ip, int port,int pace, int duration,string fileName)
+        public ActionResult Save(string ip, int port,int pace, int duration,string fileName)
         {
-            Commands.Instance.connect(ip, port);
+            Commands.Instance.Connect(ip, port);
             FileHandler.Instance.FileName = fileName;
             string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName + ".txt";
             if (System.IO.File.Exists(path))
@@ -153,9 +147,9 @@ namespace ex3.Controllers
             {
                 string ip = s;
                 int port = num;
-                Commands.Instance.connect(ip, port);
-                ViewBag.lon = Commands.Instance.getData("get /position/longitude-deg");
-                ViewBag.lat = Commands.Instance.getData("get /position/latitude-deg");
+                Commands.Instance.Connect(ip, port);
+                ViewBag.lon = Commands.Instance.GetData("get /position/longitude-deg");
+                ViewBag.lat = Commands.Instance.GetData("get /position/latitude-deg");
                 ViewBag.ip = ip;
                 ViewBag.port = port;
                 return View("Map");
@@ -164,8 +158,8 @@ namespace ex3.Controllers
                 string fileName = s;
                 int pace = num;
                 FileHandler.Instance.FileName = fileName;
-                FileHandler.Instance.pasreDataFromFile();
-                ViewBag.numOfPoints = FileHandler.Instance.getNumOfPoints();
+                FileHandler.Instance.PasreDataFromFile();
+                ViewBag.numOfPoints = FileHandler.Instance.GetNumOfPoints();
                 Session["pace"] = pace;
                 return View("Load");
             }
@@ -174,14 +168,14 @@ namespace ex3.Controllers
         public string GetFlightDataFromFile()
         {
             // parse the data from the file for the first time.
-            if (FileHandler.Instance.Index == FileHandler.Instance.getNumOfPoints())
+            if (FileHandler.Instance.Index == FileHandler.Instance.GetNumOfPoints())
             {
                 return "";
             }
-            IList<string> paramList = FileHandler.Instance.getLonLat().Split(',').ToList<string>();
+            IList<string> paramList = FileHandler.Instance.GetLonLat().Split(',').ToList<string>();
             string lon = paramList[0];
             string lat = paramList[1];
-            return createXml(lon, lat);
+            return CreateXml(lon, lat);
         }
     }
 
