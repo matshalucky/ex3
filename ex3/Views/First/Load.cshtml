@@ -9,6 +9,7 @@
 <body>
     <canvas id="canvas" style="width:100%; height:100%;"></canvas>
     <script>
+            //switching the function when the window closes. 
             window.onbeforeunload = function(){
                 $.post("@Url.Action("CloseConnection")");
             };
@@ -21,6 +22,7 @@
             var index = 0;
                  myTimer = (function () {
                      $.post("@Url.Action("GetFlightDataFromFile")").done(function (xml) {
+                     //if the xml return empty string close the program.
                      if (xml == "") {
                         alert("done!");
                         clearInterval(interval);
@@ -29,6 +31,7 @@
                     context1.canvas.height = window.innerHeight;
                     var xmldoc = $.parseXML(xml);
                     $xml = $(xmldoc);
+                    //get lon and lat from xml.
                     lon = parseFloat($xml.find("lon").text());
                     lat = parseFloat($xml.find("lat").text());
                     DrawRoute(context1, lon, lat, locations);
