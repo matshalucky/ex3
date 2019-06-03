@@ -14,7 +14,10 @@ namespace ex3.Controllers
     public class FirstController : Controller
     {
 
-        
+        /// <summary>
+        /// ask the simulator for lon and lat
+        /// </summary>
+        /// <returns>return pair of lon and lat</returns>
         private KeyValuePair<string,string> GetLonLat()
         {
             Random rnd = new Random();
@@ -29,6 +32,12 @@ namespace ex3.Controllers
 
             return new KeyValuePair<string, string>(lon, lat);
         }
+        /// <summary>
+        /// create xml to sent to view with lon and lat
+        /// </summary>
+        /// <param name="lon"></param>
+        /// <param name="lat"></param>
+        /// <returns>xml</returns>
         public string CreateXml(string lon , string lat)
         {
             StringBuilder sb = new StringBuilder();
@@ -43,6 +52,10 @@ namespace ex3.Controllers
             writer.Flush();
             return sb.ToString();
         }
+        /// <summary>
+        /// the function the view use to get and xml of lon ant lat
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public string ToXml()
         {
@@ -51,7 +64,11 @@ namespace ex3.Controllers
             string lat = point.Value;
             return CreateXml(lon, lat);
         }
-        //get the data from the server and return new xml.
+        /// <summary>
+        /// create an xml of lon and lat 
+        /// and save lon lat rudder throttle in a file
+        /// </summary>
+        /// <returns>xml</returns>
         [HttpPost] 
         public string GetFlightData()
         {
@@ -65,12 +82,19 @@ namespace ex3.Controllers
             AddData(lon, lat, rudder, throttle);
             return CreateXml(lon, lat);
         }
-        
+        /// <summary>
+        /// add data to file , will change the string member in FileHandler
+        /// </summary>
+        /// <param name="lon"></param>
+        /// <param name="lat"></param>
+        /// <param name="rud"></param>
+        /// <param name="throt"></param>
         private void AddData(string lon , string lat ,string rud, string throt)
         {
             string data = lon + "," + lat + "," + rud + "," + throt;
             FileHandler.Instance.UpdateData(data);
         }
+        
         [HttpPost]
         public void SaveData()
         {
@@ -88,24 +112,29 @@ namespace ex3.Controllers
         {
             return View();
         }
-
-        public ActionResult Map(string ip, int port)
-        {
-            Commands.Instance.Connect(ip, port);
-
-            ViewBag.lon = Commands.Instance.GetData("get /position/longitude-deg");
-            ViewBag.lat = Commands.Instance.GetData("get /position/latitude-deg");
-            ViewBag.ip = ip;
-            ViewBag.port = port;
-            return View();
-        }
-
+      
+        /// <summary>
+        /// second mission view
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
         public ActionResult DisplayRoute(string ip, int port , int time)
         {
             Commands.Instance.Connect(ip, port);
             Session["time"] = time;
             return View();
         }
+        /// <summary>
+        /// third misssion view
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        /// <param name="pace"></param>
+        /// <param name="duration"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public ActionResult Save(string ip, int port,int pace, int duration,string fileName)
         {
             Commands.Instance.Connect(ip, port);
@@ -119,12 +148,12 @@ namespace ex3.Controllers
             Session["duration"] = duration;
             return View();
         }
-
-        public ActionResult Load(string fileName, int pace)
-        {
-            return View();
-        }
-
+     
+        /// <summary>
+        /// see if an ip is valid 
+        /// </summary>
+        /// <param name="ipString"></param>
+        /// <returns></returns>
         private bool ValidateIPv4(string ipString)
         {
             if (String.IsNullOrWhiteSpace(ipString))
@@ -142,7 +171,13 @@ namespace ex3.Controllers
 
             return splitValues.All(r => byte.TryParse(r, out tempForParsing));
         }
-
+        /// <summary>
+        /// load the first mission or the last mission 
+        /// depends in output 
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="num"></param>
+        /// <returns></returns>
         public ActionResult MapOrLoad(string s , int num)
         {
             

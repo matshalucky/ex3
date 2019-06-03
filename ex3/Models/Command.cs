@@ -16,7 +16,6 @@ namespace ex3.Models
         private bool isProgramAlive = true;
         private static Commands m_Instance = null;
         private static Mutex mutex = new Mutex();
-        private Thread connection;
         // singleton
         public static Commands Instance
         {
