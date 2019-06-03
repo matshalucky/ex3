@@ -20,22 +20,22 @@
             context1.canvas.height = window.innerHeight;
             var IntervalTime = @Session["pace"] * 1000;
             var index = 0;
-                 myTimer = (function () {
-                     $.post("@Url.Action("GetFlightDataFromFile")").done(function (xml) {
-                     //if the xml return empty string close the program.
-                     if (xml == "") {
-                        alert("done!");
-                        clearInterval(interval);
-                     }
-                    context1.canvas.width = window.innerWidth;
-                    context1.canvas.height = window.innerHeight;
-                    var xmldoc = $.parseXML(xml);
-                    $xml = $(xmldoc);
-                    //get lon and lat from xml.
-                    lon = parseFloat($xml.find("lon").text());
-                    lat = parseFloat($xml.find("lat").text());
-                    DrawRoute(context1, lon, lat, locations);
-                    index++;
+            myTimer = (function () {
+                $.post("@Url.Action("GetFlightDataFromFile")").done(function (xml) {
+                //if the xml return empty string close the program.
+                if (xml == "") {
+                    alert("done!");
+                    clearInterval(interval);
+                }
+                context1.canvas.width = window.innerWidth;
+                context1.canvas.height = window.innerHeight;
+                var xmldoc = $.parseXML(xml);
+                $xml = $(xmldoc);
+                //get lon and lat from xml.
+                lon = parseFloat($xml.find("lon").text());
+                lat = parseFloat($xml.find("lat").text());
+                DrawRoute(context1, lon, lat, locations);
+                index++;
                 });
             });
             var interval = setInterval(myTimer, IntervalTime);

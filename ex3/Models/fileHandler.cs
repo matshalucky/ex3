@@ -40,7 +40,7 @@ namespace ex3.Models
         }
 
         /// <summary>
-        /// this function update the data member of the class.
+        /// this function updates the data member of the class.
         /// </summary>
         /// <param name="newData"></param>
         public void UpdateData(string newData)
@@ -49,13 +49,16 @@ namespace ex3.Models
 
         }
         /// <summary>
-        /// this function initialize the index member in order to get the first line next time.
+        /// this function initializes the index member in order to get the first line next time.
         /// </summary>
         public void Close()
         {
             Index = 0;
         }
 
+        /// <summary>
+        /// this function writes the content of the "data" member
+        /// to the file needed.
         /// </summary>
         public void WriteFile()
         {
