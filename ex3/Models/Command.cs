@@ -86,25 +86,7 @@ namespace ex3.Models
             return ParseData(data);
         }
 
-        // split multiline commands to sent to the simualtor
-        //public void sendCommand(string userCommands)
-        //{
-        //    // thread so more then one command will not delay the program
-        //    new Thread(delegate ()
-        //    {
-        //        if (!isConnected)
-        //        {
-        //            return;
-        //        }
-        //        string[] commands = userCommands.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-        //        foreach (string command in commands)
-        //        {
-        //            (command);
-        //            Thread.Sleep(2000);
-        //        }
-
-        //    }).Start();
-        //}
+       
         // close the serever
         public void Close()
         {

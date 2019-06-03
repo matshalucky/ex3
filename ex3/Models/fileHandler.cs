@@ -39,21 +39,24 @@ namespace ex3.Models
             }
         }
 
+        /// <summary>
+        /// this function update the data member of the class.
+        /// </summary>
+        /// <param name="newData"></param>
         public void UpdateData(string newData)
         {
             data = newData;
 
         }
+        /// <summary>
+        /// this function initialize the index member in order to get the first line next time.
+        /// </summary>
         public void Close()
         {
             Index = 0;
         }
 
-        //public void WriteFile()
-        //{
-        //    fileName += ".txt";
-        //    System.IO.File.WriteAllText(@fileName, data);
-        //}
+        /// </summary>
         public void WriteFile()
         {
             //create path
@@ -67,6 +70,7 @@ namespace ex3.Models
         List<string> parsedData;
         int numOfPoints = 0;
         int index = 0;
+        // index property.
         public int Index
         {
             get
@@ -78,7 +82,9 @@ namespace ex3.Models
                 index = value;
             }
         }
-        //read and parse all data from file.
+        /// <summary>
+        /// read and parse all data from file.
+        /// </summary>
         public void PasreDataFromFile()
         {
             parsedData = new List<string>();
@@ -99,10 +105,24 @@ namespace ex3.Models
             
             numOfPoints = lineCounter;
         }
-        public int GetNumOfPoints()
+
+        public int NumOfPoints
         {
-            return numOfPoints;
+            get
+            {
+                return numOfPoints;
+            }
+            set
+            {
+                numOfPoints = value;
+            }
         }
+        
+        /// <summary>
+        /// return the current index array of the parsed and add to the 
+        /// index 1.
+        /// </summary>
+        /// <returns></returns>
         public string GetLonLat()
         {
             return this.parsedData[index++];
