@@ -14,10 +14,11 @@
         $.post("@Url.Action("CloseConnection")");
     };
     var locations =[];
-        var IntervalTime = @Session["time"] * 1000
-        var firstPoint = 1;
-        var firstLon;
-        var firstLat;
+    var IntervalTime = @Session["time"] * 1000
+    var firstPoint = 1;
+    var firstLon;
+    var firstLat;
+    
     myTimer = (function () {
         $.post("@Url.Action("ToXml")").done(function (xml) {
             var c1 = document.getElementById("canvas");
@@ -32,7 +33,7 @@
         });
     });
 
-         setInterval(myTimer, IntervalTime);
+    setInterval(myTimer, IntervalTime);
         
     myTimer();
 	</script>
