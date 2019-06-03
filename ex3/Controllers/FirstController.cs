@@ -197,16 +197,20 @@ namespace ex3.Controllers
                 int pace = num;
                 FileHandler.Instance.FileName = fileName;
                 FileHandler.Instance.PasreDataFromFile();
-                ViewBag.numOfPoints = FileHandler.Instance.GetNumOfPoints();
+                ViewBag.numOfPoints = FileHandler.Instance.NumOfPoints;
                 Session["pace"] = pace;
                 return View("Load");
             }
         }
+        /// <summary>
+        /// function that view of misson 4 calls to get points from file
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public string GetFlightDataFromFile()
         {
             // parse the data from the file for the first time.
-            if (FileHandler.Instance.Index == FileHandler.Instance.GetNumOfPoints())
+            if (FileHandler.Instance.Index == FileHandler.Instance.NumOfPoints)
             {
                 return "";
             }
@@ -216,5 +220,4 @@ namespace ex3.Controllers
             return CreateXml(lon, lat);
         }
     }
-
 }

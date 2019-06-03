@@ -2,9 +2,6 @@
 @{
     ViewBag.Title = "save";
 }
-
-
-
 <html>
 <head>
     <link href="~/Image/StyleSheet1.css" rel="stylesheet" type="text/css" />
@@ -12,6 +9,7 @@
 <body>
     <canvas id="canvas" style="width:100%; height:100%;"></canvas>
     <script>
+        // close server when window is unload
         window.onbeforeunload = function(){
             $.post("@Url.Action("CloseConnection")");
         };
@@ -19,23 +17,23 @@
         var IntervalTime = @Session["pace"] * 1000;
         var c1 = document.getElementById("canvas");
         var context1 = c1.getContext("2d");
-         myTimer = (function () {
-             $.post("@Url.Action("GetFlightData")").done(function (xml) {
-                 context1.canvas.width = window.innerWidth;
-                 context1.canvas.height = window.innerHeight;
-                 var xmldoc = $.parseXML(xml);
-                 $xml = $(xmldoc);
-                 lon = parseFloat($xml.find("lon").text());
-                 lat = parseFloat($xml.find("lat").text());
-                 DrawRoute(context1, lon, lat, locations);
-                 $.post("@Url.Action("SaveData")");
+        myTimer = (function () {
+            $.post("@Url.Action("GetFlightData")").done(function (xml) {
+                context1.canvas.width = window.innerWidth;
+                context1.canvas.height = window.innerHeight;
+                var xmldoc = $.parseXML(xml);
+                $xml = $(xmldoc);
+                lon = parseFloat($xml.find("lon").text());
+                lat = parseFloat($xml.find("lat").text());
+                DrawRoute(context1, lon, lat, locations);
+                // save the data of the flight to file
+                $.post("@Url.Action("SaveData")");
+            });
         });
-    });
 
         var interval = setInterval(myTimer, IntervalTime);
         setTimeout(function () { clearInterval(interval) },@Session["duration"] * 1000);
         myTimer();
-       @*close the server*@
     </script>
 </body>
 </html>

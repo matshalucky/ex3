@@ -10,18 +10,17 @@
 	<canvas id="canvas" style="width:100%; height:100%;"></canvas>
 	
 	<script>
+    // call to close the server when window is unload
     window.onbeforeunload = function(){
         $.post("@Url.Action("CloseConnection")");
     };
     var locations =[];
-        var IntervalTime = @Session["time"] * 1000
-        var firstPoint = 1;
-        var firstLon;
-        var firstLat;
+    var IntervalTime = @Session["time"] * 1000;
     myTimer = (function () {
         $.post("@Url.Action("ToXml")").done(function (xml) {
             var c1 = document.getElementById("canvas");
             var context1 = c1.getContext("2d");
+            // update the size in case of windw minimize
             context1.canvas.width = window.innerWidth;
             context1.canvas.height = window.innerHeight;
             var xmldoc = $.parseXML(xml);
@@ -31,11 +30,8 @@
             DrawRoute(context1, lon, lat, locations); 
         });
     });
-
-         setInterval(myTimer, IntervalTime);
-        
+    setInterval(myTimer, IntervalTime);    
     myTimer();
 	</script>
-
 	</body>
 	</html>
