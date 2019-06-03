@@ -26,6 +26,7 @@ namespace ex3.Models
         public string data ="";
         public string fileName;
         public StreamWriter writer;
+        //file name property.
         public string FileName
         {
             get
@@ -55,10 +56,10 @@ namespace ex3.Models
         //}
         public void WriteFile()
         {
+            //create path
             string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName + ".txt";
             using (StreamWriter outputFile = File.AppendText(path))
             {
-       
                     outputFile.WriteLine(data);
             }
 
@@ -77,15 +78,18 @@ namespace ex3.Models
                 index = value;
             }
         }
-
+        //read and parse all data from file.
         public void PasreDataFromFile()
         {
             parsedData = new List<string>();
+            //create path.
             string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName + ".txt";
             int lineCounter = 0;
+            //read all lines from file.
             using (StreamReader sr = System.IO.File.OpenText(path))
             {
                 string s = "";
+                //adding each line to the list. 
                 while ((s = sr.ReadLine()) != null)
                 {
                     parsedData.Add(s);

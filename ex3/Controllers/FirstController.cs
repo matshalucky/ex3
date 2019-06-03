@@ -51,14 +51,17 @@ namespace ex3.Controllers
             string lat = point.Value;
             return CreateXml(lon, lat);
         }
+        //get the data from the server and return new xml.
         [HttpPost] 
         public string GetFlightData()
         {
+            //getting lon lat values.
             KeyValuePair<string, string> point = GetLonLat();
             string lon = point.Key;
             string lat = point.Value;
             string rudder = Commands.Instance.GetData("get /controls/flight/rudder");
             string throttle = Commands.Instance.GetData("get /controls/engines/current-engine/throttle");
+            //save the data at the file handler.
             AddData(lon, lat, rudder, throttle);
             return CreateXml(lon, lat);
         }
