@@ -13,25 +13,23 @@ namespace ex3.Controllers
 {
     public class FirstController : Controller
     {
+
         
-        public string Test()
-        {
-            return "success";
-        }
         private KeyValuePair<string,string> GetLonLat()
         {
             Random rnd = new Random();
-            string lon = Commands.Instance.getData("get /position/longitude-deg");
-            string lat = Commands.Instance.getData("get /position/latitude-deg");
+            string lon = Commands.Instance.GetData("get /position/longitude-deg");
+            string lat = Commands.Instance.GetData("get /position/latitude-deg");
             float lonTemp = float.Parse(lon) + rnd.Next(50);
             float latTemp = float.Parse(lat) + rnd.Next(50);
+            //float lonTemp = float.Parse(lon);
+            //float latTemp = float.Parse(lat); ;
             lon = lonTemp.ToString();
             lat = latTemp.ToString();
 
             return new KeyValuePair<string, string>(lon, lat);
         }
-
-        public string createXml(string lon , string lat)
+        public string CreateXml(string lon , string lat)
         {
             StringBuilder sb = new StringBuilder();
             XmlWriterSettings settings = new XmlWriterSettings();
@@ -51,43 +49,39 @@ namespace ex3.Controllers
             KeyValuePair<string, string> point = GetLonLat();
             string lon = point.Key;
             string lat = point.Value;
-            return createXml(lon, lat);
+            return CreateXml(lon, lat);
         }
+        //get the data from the server and return new xml.
         [HttpPost] 
         public string GetFlightData()
         {
+            //getting lon lat values.
             KeyValuePair<string, string> point = GetLonLat();
             string lon = point.Key;
             string lat = point.Value;
-            string rudder = Commands.Instance.getData("get /controls/flight/rudder");
-            string throttle = Commands.Instance.getData("get /controls/engines/current-engine/throttle");
+            string rudder = Commands.Instance.GetData("get /controls/flight/rudder");
+            string throttle = Commands.Instance.GetData("get /controls/engines/current-engine/throttle");
+            //save the data at the file handler.
             AddData(lon, lat, rudder, throttle);
-            return createXml(lon, lat);
+            return CreateXml(lon, lat);
         }
         
         private void AddData(string lon , string lat ,string rud, string throt)
         {
             string data = lon + "," + lat + "," + rud + "," + throt;
-            FileHandler.Instance.updateData(data);
+            FileHandler.Instance.UpdateData(data);
         }
-        [HttpPost]
-        public string GetFlightDataFromFile()
-        {
-            // parse the data from the file for the first time.
-            if(FileHandler.Instance.Index == FileHandler.Instance.getNumOfPoints())
-            {
-                return "";
-            }
-            IList<string> paramList = FileHandler.Instance.getLonLat().Split(',').ToList<string>();
-            string lon = paramList[0];
-            string lat = paramList[1];
-            return createXml(lon, lat);
-        }
-
         [HttpPost]
         public void SaveData()
         {
             FileHandler.Instance.WriteFile();
+        }
+        [HttpPost]
+        public void CloseConnection()
+        {
+            Commands.Instance.Close();
+            FileHandler.Instance.Close();
+            
         }
         // GET: First
         public ActionResult Index()
@@ -97,26 +91,30 @@ namespace ex3.Controllers
 
         public ActionResult Map(string ip, int port)
         {
-            Commands.Instance.connect(ip, port);
+            Commands.Instance.Connect(ip, port);
 
-            ViewBag.lon = Commands.Instance.getData("get /position/longitude-deg");
-            ViewBag.lat = Commands.Instance.getData("get /position/latitude-deg");
+            ViewBag.lon = Commands.Instance.GetData("get /position/longitude-deg");
+            ViewBag.lat = Commands.Instance.GetData("get /position/latitude-deg");
             ViewBag.ip = ip;
             ViewBag.port = port;
             return View();
         }
 
-        public ActionResult displayRoute(string ip, int port , int time)
+        public ActionResult DisplayRoute(string ip, int port , int time)
         {
-            Commands.Instance.connect(ip, port);
+            Commands.Instance.Connect(ip, port);
             Session["time"] = time;
-                       
             return View();
         }
-        public ActionResult save(string ip, int port,int pace, int duration,string fileName)
+        public ActionResult Save(string ip, int port,int pace, int duration,string fileName)
         {
-            Commands.Instance.connect(ip, port);
+            Commands.Instance.Connect(ip, port);
             FileHandler.Instance.FileName = fileName;
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName + ".txt";
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
             Session["pace"] = pace;
             Session["duration"] = duration;
             return View();
@@ -124,11 +122,64 @@ namespace ex3.Controllers
 
         public ActionResult Load(string fileName, int pace)
         {
-            FileHandler.Instance.FileName = fileName;
-            FileHandler.Instance.pasreDataFromFile();
-            ViewBag.numOfPoints = FileHandler.Instance.getNumOfPoints();
-            Session["pace"] = pace;
             return View();
         }
+
+        private bool ValidateIPv4(string ipString)
+        {
+            if (String.IsNullOrWhiteSpace(ipString))
+            {
+                return false;
+            }
+
+            string[] splitValues = ipString.Split('.');
+            if (splitValues.Length != 4)
+            {
+                return false;
+            }
+
+            byte tempForParsing;
+
+            return splitValues.All(r => byte.TryParse(r, out tempForParsing));
+        }
+
+        public ActionResult MapOrLoad(string s , int num)
+        {
+            
+            if (ValidateIPv4(s))
+            {
+                string ip = s;
+                int port = num;
+                Commands.Instance.Connect(ip, port);
+                ViewBag.lon = Commands.Instance.GetData("get /position/longitude-deg");
+                ViewBag.lat = Commands.Instance.GetData("get /position/latitude-deg");
+                ViewBag.ip = ip;
+                ViewBag.port = port;
+                return View("Map");
+            } else
+            {
+                string fileName = s;
+                int pace = num;
+                FileHandler.Instance.FileName = fileName;
+                FileHandler.Instance.PasreDataFromFile();
+                ViewBag.numOfPoints = FileHandler.Instance.GetNumOfPoints();
+                Session["pace"] = pace;
+                return View("Load");
+            }
+        }
+        [HttpPost]
+        public string GetFlightDataFromFile()
+        {
+            // parse the data from the file for the first time.
+            if (FileHandler.Instance.Index == FileHandler.Instance.GetNumOfPoints())
+            {
+                return "";
+            }
+            IList<string> paramList = FileHandler.Instance.GetLonLat().Split(',').ToList<string>();
+            string lon = paramList[0];
+            string lat = paramList[1];
+            return CreateXml(lon, lat);
+        }
     }
+
 }

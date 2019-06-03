@@ -44,15 +44,8 @@ namespace ex3.Models
             }
         }
 
-        public void openClient()
-        {
-            connection = new Thread(delegate ()
-            {
-                connect("127.0.0.1", 5400);
-            });
-            connection.Start();
-        }
-        public void connect(string ip, int port)
+       
+        public void Connect(string ip, int port)
         {
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
             client = new TcpClient();
@@ -75,12 +68,12 @@ namespace ex3.Models
             streamReader = new StreamReader(stream);
         }
         // send a comman to simulaton if connected
-        private string parseData(string data)
+        private string ParseData(string data)
         {
             string[] words = data.Split('\'');
             return words[1];
         }
-        public string getData(string command)
+        public string GetData(string command)
         {
             string data;
             if (!isConnected)
@@ -91,7 +84,7 @@ namespace ex3.Models
             byte[] bufferRoWrite = Encoding.ASCII.GetBytes(binaryCommand);
             stream.Write(bufferRoWrite, 0, bufferRoWrite.Length);
             data =streamReader.ReadLine();
-            return parseData(data);
+            return ParseData(data);
         }
 
         // split multiline commands to sent to the simualtor
@@ -114,13 +107,8 @@ namespace ex3.Models
         //    }).Start();
         //}
         // close the serever
-        public void close()
+        public void Close()
         {
-            // if the thread has not finish change the property will lead to close the server
-            if (connection.IsAlive)
-            {
-                IsProgramAlive = false;
-            }
             isConnected = false;
             client.Close();
         }

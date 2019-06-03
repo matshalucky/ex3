@@ -10,7 +10,6 @@ namespace ex3.Models
     public class FileHandler
     {
         private static FileHandler m_Instance = null;
-        
         //singelton
         public static FileHandler Instance
         {
@@ -23,9 +22,11 @@ namespace ex3.Models
                 return m_Instance;
             }
         }
-        string data ="";
-        string fileName;
-
+        
+        public string data ="";
+        public string fileName;
+        public StreamWriter writer;
+        //file name property.
         public string FileName
         {
             get
@@ -38,13 +39,32 @@ namespace ex3.Models
             }
         }
 
-        public void updateData(string newData)
+        public void UpdateData(string newData)
         {
             data = newData;
 
         }
+        public void Close()
+        {
+            Index = 0;
+        }
 
-        List<string> parsedData = new List<string>();
+        //public void WriteFile()
+        //{
+        //    fileName += ".txt";
+        //    System.IO.File.WriteAllText(@fileName, data);
+        //}
+        public void WriteFile()
+        {
+            //create path
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName + ".txt";
+            using (StreamWriter outputFile = File.AppendText(path))
+            {
+                    outputFile.WriteLine(data);
+            }
+
+        }
+        List<string> parsedData;
         int numOfPoints = 0;
         int index = 0;
         public int Index
@@ -58,45 +78,35 @@ namespace ex3.Models
                 index = value;
             }
         }
-
-        public void pasreDataFromFile()
+        //read and parse all data from file.
+        public void PasreDataFromFile()
         {
+            parsedData = new List<string>();
+            //create path.
             string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName + ".txt";
             int lineCounter = 0;
+            //read all lines from file.
             using (StreamReader sr = System.IO.File.OpenText(path))
             {
                 string s = "";
-                while((s = sr.ReadLine()) != null)
+                //adding each line to the list. 
+                while ((s = sr.ReadLine()) != null)
                 {
                     parsedData.Add(s);
                     lineCounter++;
                 }
             }
-
+            
             numOfPoints = lineCounter;
         }
-        public int getNumOfPoints()
+        public int GetNumOfPoints()
         {
             return numOfPoints;
         }
-        public string getLonLat()
+        public string GetLonLat()
         {
-            return this.parsedData[index++];   
-        }
-        //public void WriteFile()
-        //{
-        //    fileName += ".txt";
-        //    System.IO.File.WriteAllText(@fileName, data);
-        //}
-        public void WriteFile()
-        {
-            string path = AppDomain.CurrentDomain.BaseDirectory + @"\" + fileName+".txt";
-            using (StreamWriter outputFile = File.AppendText(path))
-            {
-       
-                    outputFile.WriteLine(data);             
-            }
-
+            return this.parsedData[index++];
         }
     }
+
 }
